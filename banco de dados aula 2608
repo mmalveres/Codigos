@@ -1,0 +1,32 @@
+create database aula2608;
+
+create table usuarios(
+codigo int primary key auto_increment,
+nome char(80) not null,
+idade int not null
+);
+
+insert into usuarios
+(codigo, nome, idade)
+values
+(null,'Lavinia', 20),
+(null,'Marcos', 37),
+(null,'Felipe', 34),
+(null,'Lau', 40),
+(null,'Pedro', 18),
+(null,'Felix', 20),
+(null,'Pedro', 18),
+(null,'Vinicius', 21),
+(null,'Rafael', 22),
+(null,'Marcos', 19);
+
+select * from usuarios;
+select sum(idade) from usuarios;
+select count(idade) from usuarios;
+select sum(idade)/count(idade) from usuarios;
+select avg(idade) from usuarios;
+select max(idade) from usuarios;
+select min(idade) from usuarios;
+select nome, idade from usuarios where idade >= 17 and idade<=20
+order by(nome) asc;
+select nome, idade from usuarios where nome like('M%');
