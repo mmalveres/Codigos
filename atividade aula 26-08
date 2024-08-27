@@ -1,0 +1,92 @@
+CREATE USER 'Marcos'@'localhost' IDENTIFIED BY 'marcos';
+
+CREATE DATABASE LavaRapido;
+
+GRANT ALL PRIVILEGES ON LavaRapido.* TO 'Marcos'@'localhost';
+FLUSH PRIVILEGES;
+
+CREATE TABLE cliente (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    nome VARCHAR(45),
+    cpf VARCHAR(16)
+);
+
+INSERT INTO cliente (nome, cpf) VALUES 
+('joao', '111.111.111-11'),
+('paulo', '222.222.222-22'),
+('pedro', '333.333.333-33'),
+('ana', '444.444.444-44'),
+('carlos', '555.555.555-55');
+
+CREATE TABLE veiculo (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    placa CHAR(8),
+    cor VARCHAR(15),
+    modelo VARCHAR(15),
+    marca VARCHAR(15),
+    cliente_id INT,
+    FOREIGN KEY (cliente_id) REFERENCES cliente(id)
+);
+
+INSERT INTO veiculo (placa, cor, modelo, marca, cliente_id) VALUES 
+('AAA1111', 'Branca', 'Gol', 'Volkswagen', 1),
+('BBB2222', 'Preta', 'Civic', 'Honda', 2),
+('CCC3333', 'Vermelha', 'Palio', 'Fiat', 3),
+('DDD4444', 'Branca', 'Onix', 'Chevrolet', 4),
+('EEE5555', 'Azul', 'Corolla', 'Toyota', 5);
+
+CREATE TABLE servico (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    data_servico VARCHAR(15),
+    forma_pag VARCHAR(8),
+    cliente_id INT,
+    FOREIGN KEY (cliente_id) REFERENCES cliente(id)
+);
+
+INSERT INTO servico (data_servico, forma_pag, cliente_id) VALUES 
+('2024-08-01', 'Dinheiro', 1),
+('2024-08-02', 'Cartão', 2),
+('2024-08-03', 'Dinheiro', 3),
+('2024-08-04', 'Cartão', 4),
+('2024-08-05', 'Dinheiro', 5);
+
+CREATE TABLE tipo_servico (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    nome VARCHAR(25),
+    valor DECIMAL(10,2),
+    servico_id INT,
+    FOREIGN KEY (servico_id) REFERENCES servico(id)
+);
+
+INSERT INTO tipo_servico (nome, valor, servico_id) VALUES 
+('Lavagem Completa', 50.00, 1),
+('Polimento', 100.00, 2),
+('Lavagem Simples', 30.00, 3),
+('Enceramento', 70.00, 4),
+('Lavagem Completa', 50.00, 5);
+
+SELECT v.*
+FROM veiculo v
+JOIN servico s ON v.cliente_id = s.cliente_id
+ORDER BY v.placa ASC;
+
+SELECT v.*, ts.valor
+FROM veiculo v
+JOIN servico s ON v.cliente_id = s.cliente_id
+JOIN tipo_servico ts ON s.id = ts.servico_id
+ORDER BY ts.valor ASC;
+
+SELECT *
+FROM veiculo
+WHERE placa LIKE 'J%';
+
+SELECT c.*
+FROM cliente c
+JOIN veiculo v ON c.id = v.cliente_id
+WHERE v.modelo = 'Gol' AND v.marca = 'Volkswagen';
+
+SELECT DISTINCT c.*
+FROM cliente c
+JOIN veiculo v ON c.id = v.cliente_id
+JOIN servico s ON c.id = s.cliente_id
+WHERE v.cor = 'Branca';
